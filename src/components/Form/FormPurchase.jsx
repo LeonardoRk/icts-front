@@ -15,6 +15,16 @@ class MyFormPurchase extends Component {
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.purchase != this.props.purchase) {
+            if (this.props.purchase && this.props.purchase.Produtos) {
+                console.log(this.props.purchase);
+                let checkeds = this.props.purchase.Produtos.map(p => p.id)
+                this.setState({ checkeds })
+            }
+        }
+    }
+
     resetState() {
         this.setState({
             total: 0,
@@ -38,12 +48,12 @@ class MyFormPurchase extends Component {
 
     async createPurchase(e) {
         e.preventDefault();
-    
+
         const purchase = {
             total: this.state.total,
             tipo_pagamento: this.state.tipo_pagamento,
             status: this.state.status,
-            produtosId: this.state.checkeds
+            Produtos: this.state.checkeds
         }
 
         const p = await PurchaseService.createPurchase(purchase);
@@ -81,7 +91,7 @@ class MyFormPurchase extends Component {
     }
 
     handle(id) {
-        return this.state.checkeds.filter((number) => number === id).length > 0    
+        return this.state.checkeds.filter((number) => number === id).length > 0
     }
 
     render() {
@@ -91,7 +101,9 @@ class MyFormPurchase extends Component {
 
                     <Form.Group controlId="formHorizontalCheck">
                         {this.props.products.map((item) => (
-                            <Form.Check checked={this.handle(item.id)} key={item.id} onChange={this.handleChange.bind(this)} inline label={item.nome} type='checkbox' id={`in-${item.id}`} />
+                            <Form.Check readOnly={true}
+                                checked={this.handle(item.id)} 
+                                key={item.id} onChange={this.handleChange.bind(this)} inline label={item.nome} type='checkbox' id={`in-${item.id}`} />
                         ))}
                     </Form.Group>
 
@@ -137,8 +149,8 @@ class MyFormPurchase extends Component {
                                 <Form.Label>Criado em:</Form.Label>
                                 <Form.Control readOnly={this.props.readOnly}
                                     type="text" placeholder="Criado em"
-                                    value={this.props.product ?
-                                        new Intl.DateTimeFormat('pt-br').format(new Date(this.props.product.createdAt))
+                                    value={this.props.purchase ?
+                                        this.props.purchase.createdAt
                                         : ""} />
                             </Form.Group>
 
@@ -146,7 +158,7 @@ class MyFormPurchase extends Component {
                                 <Form.Label>Atualizado em:</Form.Label>
                                 <Form.Control readOnly={this.props.readOnly}
                                     type="text" placeholder="Atualizado em"
-                                    value={this.props.product ? new Intl.DateTimeFormat('pt-br').format(new Date(this.props.product.updatedAt)) : ""} />
+                                    value={this.props.purchase ? this.props.purchase.updatedAt : ""} />
                             </Form.Group>
                         </div>
                     }

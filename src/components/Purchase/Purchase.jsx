@@ -36,6 +36,9 @@ class Purchase extends Component {
     openCompleteModal(option, index) {
         const modeComplete = option
         if (option === "view" && index !== null) {
+            const openComplete = this.state.openComplete
+            const selectedPurchase = this.state.purchases[index]
+            this.setState({ openComplete: !openComplete, modeComplete, selectedPurchase })
         } else if (option === "create" && index === null) {
             const openComplete = this.state.openComplete
             const selectedPurchase = null;
