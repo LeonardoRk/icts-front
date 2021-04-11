@@ -27,6 +27,19 @@ class ProductService {
             return  null;
         }
     }
+
+    static async createProduct(product) {
+        let response;
+        try {
+            console.log("mandando produto")
+            response = await api.post(resource, product)
+            console.log("retornando produto")
+            return response.data
+        } catch(error) {
+            console.log("erro de produto")
+            return null
+        }
+    }
 }
 
 export default ProductService;

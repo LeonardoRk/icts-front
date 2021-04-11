@@ -4,7 +4,9 @@ import './product.css'
 
 import TableHeader from '../TableHeader';
 import TableBody from '../TableBody'
-import YesNoModal from '../YesNoModal'
+import { YesNoModal } from '../modal'
+import { CompleteModal } from '../modal'
+import { Button } from 'react-bootstrap'
 
 class Product extends Component {
 
@@ -17,7 +19,9 @@ class Product extends Component {
             products: [],
             showYesNo: false,
             selectedProduct: null,
-            productName: null
+            productName: null,
+            openComplete: false,
+            modeComplete: null
         };
     }
 
@@ -47,8 +51,30 @@ class Product extends Component {
         return productName;
     }
 
-    hideModal() {
+    hideYesNoModal() {
         this.setYesNoModal(null)
+    }
+
+    openCompleteModal(option, index) {
+        console.log("abrir modal completa")
+        const modeComplete = option
+        if(option === "view" && index !== null) {
+            const openComplete = this.state.openComplete
+            const selectedProduct = this.state.products[index]
+            this.setState({openComplete: !openComplete, modeComplete, selectedProduct})
+        } else if(option === "create" && index === null) {
+            console.log("modo create")
+            const openComplete = this.state.openComplete
+            const selectedProduct = null;
+            this.setState({openComplete: !openComplete, modeComplete, selectedProduct})
+
+        }
+    }
+
+    closeCompleteModal() {
+        this.setState({openComplete : false, 
+            selectedProduct: null, 
+            modeComplete: null})
     }
 
     async deleteUser() {
@@ -73,16 +99,26 @@ class Product extends Component {
     render() {
         return (
             <section>
+                <Button className="mt-2 mb-2"
+                    onClick={() => this.openCompleteModal("create", null)}>
+                    Criar Produto
+                </Button>
                 <table >
                     <TableHeader fields={this.fields} />
                     <TableBody setYesNoVisible={this.setYesNoModal.bind(this)}  
+                                openCompleteModal={this.openCompleteModal.bind(this)}
                                 items={this.state.products} />
                 </table>
 
                 <YesNoModal show={this.state.showYesNo} 
                             productName={this.state.productName}
-                            handleClose={this.hideModal.bind(this)}
+                            handleClose={this.hideYesNoModal.bind(this)}
                             confirm={this.deleteUser.bind(this)} />
+
+                <CompleteModal  product={this.state.selectedProduct}
+                                 mode={this.state.modeComplete} 
+                                show={this.state.openComplete} 
+                                close={this.closeCompleteModal.bind(this)} />
             </section>
         );
     }

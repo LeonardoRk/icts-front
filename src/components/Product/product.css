@@ -13,3 +13,11 @@ tr:nth-child(even) {
     text-align: left;
     padding: 8px;
   }
+
+  .mt-2 {
+    margin-top: 2 !important;
+  }
+
+  .mb-2 {
+    margin-top: 2 !important;
+  }
