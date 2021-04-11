@@ -6,7 +6,6 @@ class MyFormProduct extends Component {
 
     constructor(props) {
         super(props)
-        console.log(this.props);
         this.state = {
             nome: "",
             descricao: "",
@@ -28,13 +27,11 @@ class MyFormProduct extends Component {
 
     async createProduct(e) {
         e.preventDefault();
-        console.log("ceate\n\n\n")
         const product = {
             nome: this.state.nome,
             descricao: this.state.descricao,
             preco: this.state.preco
         }
-        console.log("criando")
         let data = await ProductService.createProduct(product);
         if(data !== null) {
             this.reset();
@@ -44,9 +41,7 @@ class MyFormProduct extends Component {
     }
 
     reset() {
-        this.state.nome = "";
-        this.state.descricao = "";
-        this.state.preco = "";
+        this.setState({nome: "", descricao: "", preco: ""})
     }
 
     render() {

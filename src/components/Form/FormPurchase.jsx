@@ -16,7 +16,6 @@ class MyFormPurchase extends Component {
     }
 
     resetState() {
-        console.log("reseting")
         this.setState({
             total: 0,
             tipo_pagamento: "",
@@ -39,20 +38,19 @@ class MyFormPurchase extends Component {
 
     async createPurchase(e) {
         e.preventDefault();
-        console.log(e.target);
-        return;
+    
         const purchase = {
             total: this.state.total,
             tipo_pagamento: this.state.tipo_pagamento,
             status: this.state.status,
             produtosId: this.state.checkeds
         }
-        console.log(purchase);
 
         const p = await PurchaseService.createPurchase(purchase);
         if (p !== null) {
             this.resetState();
-            console.log("faz algo")
+            this.props.close();
+            this.props.afterCreate(p);
         }
 
     }
@@ -65,7 +63,6 @@ class MyFormPurchase extends Component {
         } else {
             checks.push(Number(id))
         }
-        console.log(checks.length)
         this.setState({ checkeds: checks }, () => {
             this._evaluateTotal(this);
         })
@@ -77,7 +74,6 @@ class MyFormPurchase extends Component {
         if (this.state.checkeds.length !== 0) {
             this.state.checkeds.forEach((id) => {
                 let p = _.find(this.props.products, _.matchesProperty('id', id))
-                console.log(p)
                 total += p.preco
             })
         }

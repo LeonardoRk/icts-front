@@ -17,6 +17,8 @@ class YesNoModal extends Component {
             let content = "";
             if (this.props.productName != null) {
                 content = `Deseja excluir produto ${this.props.productName} ?`
+            } else if (this.props.purchaseId !== null) {
+                content = `Deseja excluir compra com id ${this.props.purchaseId} ?`
             }
             this.setState(
                 {
@@ -44,7 +46,7 @@ class YesNoModal extends Component {
             <div className={this.state.showHideClassName}>
                 <Modal.Dialog >
                     <Modal.Header onClick={this.props.handleClose} closeButton>
-                        <Modal.Title>Excluir produto</Modal.Title>
+                        <Modal.Title>Excluir {this.props.type === 'product'? "produto" : "compra"}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>

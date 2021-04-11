@@ -21,13 +21,20 @@ class PurchaseService {
     static async createPurchase(purchase) {
         let response;
         try {
-            console.log("enviando compra")
             response = await api.post(resource, purchase)
-            console.log("compra voltou")
             return response.data
         }catch(error) {
-            console.log("compra erro")
             return null;
+        }
+    }
+
+    static async deletePurchase(id) {
+        let response;
+        try {
+            response = await api.delete(resource + `/${id}`)
+            return response.data;
+        } catch(error) {
+            return  null;
         }
     }
 }

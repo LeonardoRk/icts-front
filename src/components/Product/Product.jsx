@@ -14,7 +14,6 @@ class Product extends Component {
  
     constructor(props) {
         super(props);
-        this.showYesNo = false;
         this.state = {
             products: [],
             showYesNo: false,
@@ -27,14 +26,11 @@ class Product extends Component {
 
     async componentDidMount() {
         const data = await ProductService.listAllProducts()
-        console.log(data);
         this.setState({products: data})
     }
 
     setYesNoModal(selectedProductIndex) {
         const lastState = this.state.showYesNo
-        console.log(lastState)
-        console.log(this.state.modeComplete)
         const productName = this._getSelectedProductName(selectedProductIndex)
         this.setState({
             showYesNo : !lastState, 
@@ -60,14 +56,12 @@ class Product extends Component {
     }
 
     openCompleteModal(option, index) {
-        console.log("abrir modal completa")
         const modeComplete = option
         if(option === "view" && index !== null) {
             const openComplete = this.state.openComplete
             const selectedProduct = this.state.products[index]
             this.setState({openComplete: !openComplete, modeComplete, selectedProduct})
         } else if(option === "create" && index === null) {
-            console.log("modo create")
             const openComplete = this.state.openComplete
             const selectedProduct = null;
             this.setState({openComplete: !openComplete, modeComplete, selectedProduct})
@@ -83,14 +77,13 @@ class Product extends Component {
 
     afterCreateProduct(product) {
         if(product !== null) {
-            console.log((product))
             let products = this.state.products
             products.push(product)
             this.setState({products})
         }
     }
 
-    async deleteUser() {
+    async deleteProduct() {
         if(this.state.selectedProduct != null) {
             if(this.state.products[this.state.selectedProduct] != null) {
                 const productToDelete = this.state.products[this.state.selectedProduct];
@@ -118,15 +111,16 @@ class Product extends Component {
                 </Button>
                 <table >
                     <TableHeader fields={this.fields} />
-                    <TableBody setYesNoVisible={this.setYesNoModal.bind(this)}  
+                    <TableBody type={this.props.type}
+                            setYesNoVisible={this.setYesNoModal.bind(this)}  
                                 openCompleteModal={this.openCompleteModal.bind(this)}
                                 items={this.state.products} />
                 </table>
 
-                <YesNoModal show={this.state.showYesNo} 
+                <YesNoModal type={this.props.type} show={this.state.showYesNo} 
                             productName={this.state.productName}
                             handleClose={this.hideYesNoModal.bind(this)}
-                            confirm={this.deleteUser.bind(this)} />
+                            confirm={this.deleteProduct.bind(this)} />
 
                 <CompleteModal  type={this.props.type}
                               product={this.state.selectedProduct}

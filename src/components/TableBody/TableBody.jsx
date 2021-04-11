@@ -4,6 +4,10 @@ import Options  from '../Options'
 
 class TableBody extends Component {
 
+    constructor(props) {
+        super(props)
+    }
+
     setYesNo(index) {
         this.props.setYesNoVisible(index);
     }
@@ -17,7 +21,7 @@ class TableBody extends Component {
                         <td className="hover" 
                             close={this.props.close}
                             onClick={() => {this.props.openCompleteModal("view", index)}}>
-                            {item.nome}
+                            {this.props.type === "product" ? item.nome : item.total}
                         </td>
                         <td>
                             <Options index={index} setYesNo={this.setYesNo.bind(this)} />
