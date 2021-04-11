@@ -1,0 +1,22 @@
+.edit-button {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #4CAF50;
+}
+
+.edit-button:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+
+.delete-button {
+    background-color: white; 
+    color: black; 
+    border: 2px solid rgb(228, 34, 44);
+  }
+  
+  .delete-button:hover {
+    background-color: rgb(228, 34, 44);
+    color: white;
+  }
