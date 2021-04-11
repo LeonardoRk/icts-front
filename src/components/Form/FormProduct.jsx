@@ -6,6 +6,7 @@ class MyFormProduct extends Component {
 
     constructor(props) {
         super(props)
+        console.log(this.props);
         this.state = {
             nome: "",
             descricao: "",
@@ -25,19 +26,33 @@ class MyFormProduct extends Component {
         this.setState({ preco: event.target.value })
     }
 
-    createProduct() {
+    async createProduct(e) {
+        e.preventDefault();
+        console.log("ceate\n\n\n")
         const product = {
             nome: this.state.nome,
             descricao: this.state.descricao,
             preco: this.state.preco
         }
-        ProductService.createProduct(product);
+        console.log("criando")
+        let data = await ProductService.createProduct(product);
+        if(data !== null) {
+            this.reset();
+            this.props.close();
+            this.props.afterCreate(data)
+        }
+    }
+
+    reset() {
+        this.state.nome = "";
+        this.state.descricao = "";
+        this.state.preco = "";
     }
 
     render() {
         return (
             <section>
-                <Form onSubmit={this.createProduct.bind(this)}>
+                <Form onSubmit={ this.createProduct.bind(this)}>
                     <Form.Group controlId="formBasicNome">
                         <Form.Label>Nome</Form.Label>
                         <Form.Control readOnly={this.props.readOnly}

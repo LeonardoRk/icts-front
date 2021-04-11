@@ -54,16 +54,14 @@ class CompleteModal extends Component {
         }
     }
 
-    myRef() {
-
-    }
     render() {
         return (
             <section className={this.state.checkShow}>
                 <Modal.Dialog >
                     <Modal.Header 
                         onClick={() => {
-                            if(this.props.mode != "view")
+                            if(this.props.mode != "view" && 
+                                (this.props.mode != "create") || this.props.type != "product")
                                 this.childRef.current.resetState(); 
                             this.props.close()}} closeButton>
                         <Modal.Title>{this.state.headerText}</Modal.Title>
@@ -72,7 +70,9 @@ class CompleteModal extends Component {
                     <Modal.Body>
                         {this.props.type == "product" ?
                             <FormProduct readOnly={!this.state.editable}
-                                product={this.props.product} />
+                                product={this.props.product} 
+                                afterCreate={this.props.afterCreate}
+                                close={this.props.close}/>
                             :
                             null
                         }

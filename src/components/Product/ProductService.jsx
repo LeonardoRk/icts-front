@@ -29,8 +29,8 @@ class ProductService {
     }
 
     static async createProduct(product) {
-        let response;
         try {
+        let response;
             console.log("mandando produto")
             response = await api.post(resource, product)
             console.log("retornando produto")

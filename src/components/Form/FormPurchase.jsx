@@ -16,6 +16,7 @@ class MyFormPurchase extends Component {
     }
 
     resetState() {
+        console.log("reseting")
         this.setState({
             total: 0,
             tipo_pagamento: "",
@@ -36,7 +37,10 @@ class MyFormPurchase extends Component {
         this.setState({ status: event.target.value })
     }
 
-    createPurchase() {
+    async createPurchase(e) {
+        e.preventDefault();
+        console.log(e.target);
+        return;
         const purchase = {
             total: this.state.total,
             tipo_pagamento: this.state.tipo_pagamento,
@@ -45,47 +49,57 @@ class MyFormPurchase extends Component {
         }
         console.log(purchase);
 
-        PurchaseService.createPurchase(purchase);
+        const p = await PurchaseService.createPurchase(purchase);
+        if (p !== null) {
+            this.resetState();
+            console.log("faz algo")
+        }
+
     }
 
     handleChange(event) {
         const id = event.target.id.replace("in-", "");
         let checks = this.state.checkeds;
-        if(event.target.checked === false) {
+        if (event.target.checked === false) {
             checks = checks.filter(i => Number(i) !== Number(id));
         } else {
             checks.push(Number(id))
         }
         console.log(checks.length)
-        this.setState({checkeds: checks}, () => {
+        this.setState({ checkeds: checks }, () => {
             this._evaluateTotal(this);
         })
-        
+
     }
 
     _evaluateTotal() {
         let total = 0;
-        if(this.state.checkeds.length !== 0) {
+        if (this.state.checkeds.length !== 0) {
             this.state.checkeds.forEach((id) => {
                 let p = _.find(this.props.products, _.matchesProperty('id', id))
                 console.log(p)
                 total += p.preco
             })
-        } 
-        this.setState({ total: total})
+        }
+        this.setState({ total: total })
+    }
+
+    handle(id) {
+        return this.state.checkeds.filter((number) => number === id).length > 0    
     }
 
     render() {
         return (
             <section>
                 <Form onSubmit={this.createPurchase.bind(this)}>
-                    <Form.Group controlId="formBasicProducts">
-                        
+
+                    <Form.Group controlId="formHorizontalCheck">
                         {this.props.products.map((item) => (
-                            <Form.Check key={item.id} onChange={this.handleChange.bind(this)} inline label={item.nome} type='checkbox' id={`in-${item.id}`} />
+                            <Form.Check checked={this.handle(item.id)} key={item.id} onChange={this.handleChange.bind(this)} inline label={item.nome} type='checkbox' id={`in-${item.id}`} />
                         ))}
                     </Form.Group>
-                    
+
+
 
                     <Form.Group controlId="formBasicPaymentType">
                         <Form.Label>Total</Form.Label>
@@ -116,8 +130,8 @@ class MyFormPurchase extends Component {
 
 
                     {!this.props.readOnly ?
-                        <Button disabled={this.state.total <= 0 || this.state.checkeds === [] 
-                                || this.state.tipo_pagamento === "" || this.state.status === ""} 
+                        <Button disabled={this.state.total <= 0 || this.state.checkeds === []
+                            || this.state.tipo_pagamento === "" || this.state.status === ""}
                             variant="primary" type="submit">
                             Criar
                         </Button>

@@ -81,6 +81,15 @@ class Product extends Component {
             modeComplete: null})
     }
 
+    afterCreateProduct(product) {
+        if(product !== null) {
+            console.log((product))
+            let products = this.state.products
+            products.push(product)
+            this.setState({products})
+        }
+    }
+
     async deleteUser() {
         if(this.state.selectedProduct != null) {
             if(this.state.products[this.state.selectedProduct] != null) {
@@ -123,6 +132,7 @@ class Product extends Component {
                               product={this.state.selectedProduct}
                                  mode={this.state.modeComplete} 
                                 show={this.state.openComplete} 
+                                afterCreate={this.afterCreateProduct.bind(this)}
                                 close={this.closeCompleteModal.bind(this)} />
             </section>
         );
