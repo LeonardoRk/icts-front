@@ -1,7 +1,6 @@
 
-## Available Scripts
+## Para rodar o projeto
+> npm install
+> alterar no arquivo .env o endereço da api 
+> npm start
 
-In the project directory, you can run:
-### `npm install`
-
-### `npm start`
