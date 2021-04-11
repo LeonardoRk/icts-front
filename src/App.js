@@ -21,10 +21,10 @@ class App extends Component {
         
         <Switch>
           <Route path="/products">
-            <Product />
+            <Product type="product" />
           </Route>
           <Route path="/purchases">
-            <Purchase />
+            <Purchase type="purchase" />
           </Route>
         </Switch>
       </Router>

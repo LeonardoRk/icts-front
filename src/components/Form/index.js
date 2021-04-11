@@ -1,3 +1,4 @@
-import Form from './Form'
+import FormProduct from './FormProduct'
+import FormPurchase from './FormPurchase'
 
-export default Form;
+export { FormProduct, FormPurchase }

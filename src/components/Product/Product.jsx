@@ -11,9 +11,9 @@ import { Button } from 'react-bootstrap'
 class Product extends Component {
 
     fields = ["Id", "Nome", "Opções"];
-
-    constructor() {
-        super();
+ 
+    constructor(props) {
+        super(props);
         this.showYesNo = false;
         this.state = {
             products: [],
@@ -33,11 +33,15 @@ class Product extends Component {
 
     setYesNoModal(selectedProductIndex) {
         const lastState = this.state.showYesNo
+        console.log(lastState)
+        console.log(this.state.modeComplete)
         const productName = this._getSelectedProductName(selectedProductIndex)
         this.setState({
             showYesNo : !lastState, 
             selectedProduct: selectedProductIndex,
-            productName: productName
+            productName: productName,
+            openComplete:false,
+            modeComplete:null
         })
     }
 
@@ -115,7 +119,8 @@ class Product extends Component {
                             handleClose={this.hideYesNoModal.bind(this)}
                             confirm={this.deleteUser.bind(this)} />
 
-                <CompleteModal  product={this.state.selectedProduct}
+                <CompleteModal  type={this.props.type}
+                              product={this.state.selectedProduct}
                                  mode={this.state.modeComplete} 
                                 show={this.state.openComplete} 
                                 close={this.closeCompleteModal.bind(this)} />

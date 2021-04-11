@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import ProductService from '../Product/ProductService';
 
-class MyForm extends Component {
+class MyFormProduct extends Component {
 
     constructor(props) {
         super(props)
@@ -45,9 +45,6 @@ class MyForm extends Component {
                             onChange={this.setNome.bind(this)}
                             value={this.props.product ? this.props.product.nome :
                                 this.state.nome} />
-                        <Form.Text className="text-muted">
-                            We'll never share your email with anyone else.
-                    </Form.Text>
                     </Form.Group>
 
                     <Form.Group controlId="formBasicDescription">
@@ -75,12 +72,13 @@ class MyForm extends Component {
                         </Button>
                         :
                         <div>
+                            
                             <Form.Group controlId="formBasicCreated">
                                 <Form.Label>Criado em:</Form.Label>
                                 <Form.Control readOnly={this.props.readOnly}
                                     type="text" placeholder="Criado em"
-                                    value={this.props.product ?
-                                        new Intl.DateTimeFormat('pt-br').format(new Date(this.props.product.createdAt))
+                                    value={this.props.product !== null ?
+                                        this.props.product.createdAt
                                         : ""} />
                             </Form.Group>
 
@@ -88,8 +86,9 @@ class MyForm extends Component {
                                 <Form.Label>Atualizado em:</Form.Label>
                                 <Form.Control readOnly={this.props.readOnly}
                                     type="text" placeholder="Atualizado em"
-                                    value={this.props.product ? new Intl.DateTimeFormat('pt-br').format(new Date(this.props.product.updatedAt)) : ""} />
+                                    value={this.props.product !== null ? this.props.product.updatedAt : ""} />
                             </Form.Group>
+                            
                         </div>
                     }
                 </Form>
@@ -98,4 +97,4 @@ class MyForm extends Component {
     }
 }
 
-export default MyForm;
+export default MyFormProduct;

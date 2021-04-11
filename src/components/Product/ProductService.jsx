@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const resource = "produtos"
-const api = axios.create({
-    baseURL: process.env.REACT_APP_API_SERVER_URL
-});
+    const resource = "produtos"
+    const api = axios.create({
+        baseURL: process.env.REACT_APP_API_SERVER_URL
+    });
 
 class ProductService {
     
