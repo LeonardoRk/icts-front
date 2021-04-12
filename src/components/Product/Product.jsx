@@ -65,7 +65,10 @@ class Product extends Component {
             const openComplete = this.state.openComplete
             const selectedProduct = null;
             this.setState({openComplete: !openComplete, modeComplete, selectedProduct})
-
+        } else if(option === "edit" && index !== null) {
+            const openComplete = this.state.openComplete
+            const selectedProduct = this.state.products[index]
+            this.setState({ openComplete: !openComplete, modeComplete, selectedProduct })
         }
     }
 
@@ -75,10 +78,15 @@ class Product extends Component {
             modeComplete: null})
     }
 
-    afterCreateProduct(product) {
+    afterCreateProduct(product, mode) {
         if(product !== null) {
             let products = this.state.products
-            products.push(product)
+            if(mode === "create") {
+                products.push(product)
+            }else if (mode === "update") {
+                products = products.filter(item => item.id !== product.id)
+                products.push(product)
+            }
             this.setState({products})
         }
     }

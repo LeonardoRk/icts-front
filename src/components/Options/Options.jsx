@@ -7,6 +7,7 @@ class Options extends Component {
         return(
             <center>
                 <button 
+                    onClick={() => {this.props.openCompleteModal("edit", this.props.index)}}
                     className="edit-button">EDITAR
                 </button>
                 <button 

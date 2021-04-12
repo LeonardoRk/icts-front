@@ -24,7 +24,8 @@ class TableBody extends Component {
                             {this.props.type === "product" ? item.nome : item.total}
                         </td>
                         <td>
-                            <Options index={index} setYesNo={this.setYesNo.bind(this)} />
+                            <Options index={index} openCompleteModal={this.props.openCompleteModal}
+                             setYesNo={this.setYesNo.bind(this)} />
                         </td>
                     </tr>
                 ))}

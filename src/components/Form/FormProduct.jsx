@@ -13,6 +13,18 @@ class MyFormProduct extends Component {
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if(prevProps !== this.props) {
+            if(this.props.product !== null) {
+                this.setState({
+                    preco: this.props.product.preco,
+                    descricao: this.props.product.descricao,
+                    nome: this.props.product.nome
+                })
+            }
+        }
+    }
+
     setNome(event) {
         this.setState({ nome: event.target.value })
     }
@@ -25,36 +37,43 @@ class MyFormProduct extends Component {
         this.setState({ preco: event.target.value })
     }
 
-    async createProduct(e) {
+    async submitProduct(e) {
         e.preventDefault();
         const product = {
             nome: this.state.nome,
             descricao: this.state.descricao,
             preco: this.state.preco
         }
-        let data = await ProductService.createProduct(product);
+        let data = null
+        let mode = "";
+        if(this.props.mode === "create") {
+            mode = "create"
+            data = await ProductService.createProduct(product);
+        } else if (this.props.mode === "edit") {
+            mode = "update"
+            data = await ProductService.updateProduct(product, this.props.product.id);
+        }
         if(data !== null) {
-            this.reset();
+            this.resetState();
             this.props.close();
-            this.props.afterCreate(data)
+            this.props.afterCreate(data, mode)
         }
     }
 
-    reset() {
+    resetState() {
         this.setState({nome: "", descricao: "", preco: ""})
     }
 
     render() {
         return (
             <section>
-                <Form onSubmit={ this.createProduct.bind(this)}>
+                <Form onSubmit={ this.submitProduct.bind(this)}>
                     <Form.Group controlId="formBasicNome">
                         <Form.Label>Nome</Form.Label>
                         <Form.Control readOnly={this.props.readOnly}
                             type="text" placeholder="Nome"
                             onChange={this.setNome.bind(this)}
-                            value={this.props.product ? this.props.product.nome :
-                                this.state.nome} />
+                            value={this.state.nome} />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicDescription">
@@ -62,8 +81,7 @@ class MyFormProduct extends Component {
                         <Form.Control readOnly={this.props.readOnly}
                             type="text" placeholder="Descrição"
                             onChange={this.setDescricao.bind(this)}
-                            value={this.props.product ? this.props.product.descricao :
-                                this.state.descricao} />
+                            value={this.state.descricao} />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPrice">
@@ -71,8 +89,7 @@ class MyFormProduct extends Component {
                         <Form.Control readOnly={this.props.readOnly}
                             type="number" step="0.01" placeholder="Preço"
                             onChange={this.setPreco.bind(this)}
-                            value={this.props.product ? this.props.product.preco :
-                                this.state.preco} />
+                            value={this.state.preco} />
                     </Form.Group>
 
                     {!this.props.readOnly ?

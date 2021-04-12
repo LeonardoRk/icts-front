@@ -35,13 +35,17 @@ class Purchase extends Component {
 
     openCompleteModal(option, index) {
         const modeComplete = option
-        if (option === "view" && index !== null) {
+        if ((option === "view" && index !== null)) {
             const openComplete = this.state.openComplete
             const selectedPurchase = this.state.purchases[index]
             this.setState({ openComplete: !openComplete, modeComplete, selectedPurchase })
         } else if (option === "create" && index === null) {
             const openComplete = this.state.openComplete
             const selectedPurchase = null;
+            this.setState({ openComplete: !openComplete, modeComplete, selectedPurchase })
+        } else if(option === "edit" && index !== null) {
+            const openComplete = this.state.openComplete
+            const selectedPurchase = this.state.purchases[index]
             this.setState({ openComplete: !openComplete, modeComplete, selectedPurchase })
         }
     }
@@ -54,11 +58,15 @@ class Purchase extends Component {
         })
     }
 
-    afterPurchaseCreated(purchase) {
-        console.log(purchase)
+    afterPurchaseCreated(purchase, mode) {
         if (purchase !== null) {
             let purchases = this.state.purchases;
-            purchases.push(purchase)
+            if(mode === "create") {
+                purchases.push(purchase)
+            }else if (mode === "update") {
+                purchases = purchases.filter(item => item.id !== purchase.id)
+                purchases.push(purchase)
+            }
             this.setState({ purchases })
         }
     }

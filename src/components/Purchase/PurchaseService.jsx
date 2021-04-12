@@ -28,6 +28,16 @@ class PurchaseService {
         }
     }
 
+    static async editPurchase(purchase, id) {
+        let response;
+        try {
+            response = await api.put(resource + "/" + id, purchase)
+            return response.data
+        }catch(error) {
+            return null;
+        }
+    }
+
     static async deletePurchase(id) {
         let response;
         try {

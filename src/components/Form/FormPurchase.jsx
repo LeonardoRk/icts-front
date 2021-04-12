@@ -22,6 +22,14 @@ class MyFormPurchase extends Component {
                 let checkeds = this.props.purchase.Produtos.map(p => p.id)
                 this.setState({ checkeds })
             }
+
+            if(this.props.purchase) {
+                this.setState({
+                    status: this.props.purchase.status,
+                    tipo_pagamento : this.props.purchase.tipo_pagamento,
+                    total : this.props.purchase.total
+                })
+            }
         }
     }
 
@@ -46,7 +54,7 @@ class MyFormPurchase extends Component {
         this.setState({ status: event.target.value })
     }
 
-    async createPurchase(e) {
+    async submitPurchase(e) {
         e.preventDefault();
 
         const purchase = {
@@ -55,12 +63,20 @@ class MyFormPurchase extends Component {
             status: this.state.status,
             Produtos: this.state.checkeds
         }
-
-        const p = await PurchaseService.createPurchase(purchase);
+        
+        let p = null;
+        let mode = "";
+        if(this.props.mode === "create") {
+            mode = "create"
+            p = await PurchaseService.createPurchase(purchase);
+        }else if (this.props.mode === "edit") {
+            mode = "update"
+            p = await PurchaseService.editPurchase(purchase, this.props.purchase.id);
+        }
         if (p !== null) {
             this.resetState();
             this.props.close();
-            this.props.afterCreate(p);
+            this.props.afterCreate(p, mode);
         }
 
     }
@@ -87,21 +103,24 @@ class MyFormPurchase extends Component {
                 total += p.preco
             })
         }
+        console.log(total)
         this.setState({ total: total })
     }
 
     handle(id) {
+        console.log("mudando")
         return this.state.checkeds.filter((number) => number === id).length > 0
     }
+
 
     render() {
         return (
             <section>
-                <Form onSubmit={this.createPurchase.bind(this)}>
+                <Form onSubmit={this.submitPurchase.bind(this)}>
 
                     <Form.Group controlId="formHorizontalCheck">
                         {this.props.products.map((item) => (
-                            <Form.Check readOnly={true}
+                            <Form.Check disabled={this.props.readOnly} 
                                 checked={this.handle(item.id)} 
                                 key={item.id} onChange={this.handleChange.bind(this)} inline label={item.nome} type='checkbox' id={`in-${item.id}`} />
                         ))}
@@ -114,8 +133,7 @@ class MyFormPurchase extends Component {
                         <Form.Control readOnly={true}
                             type="text" placeholder="Total"
                             onChange={this.setTotal.bind(this)}
-                            value={this.props.purchase ? this.props.purchase.total :
-                                this.state.total} />
+                            value={this.state.total} />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPaymentType">
@@ -123,8 +141,7 @@ class MyFormPurchase extends Component {
                         <Form.Control readOnly={this.props.readOnly}
                             type="text" placeholder="Tipo de pagamento"
                             onChange={this.setTipoPagamento.bind(this)}
-                            value={this.props.purchase ? this.props.purchase.tipo_pagamento :
-                                this.state.tipo_pagamento} />
+                            value={this.state.tipo_pagamento} />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicStatus">
@@ -132,8 +149,7 @@ class MyFormPurchase extends Component {
                         <Form.Control readOnly={this.props.readOnly}
                             type="text" placeholder="Status"
                             onChange={this.setStatus.bind(this)}
-                            value={this.props.purchase ? this.props.purchase.status :
-                                this.state.status} />
+                            value={this.state.status} />
                     </Form.Group>
 
 
